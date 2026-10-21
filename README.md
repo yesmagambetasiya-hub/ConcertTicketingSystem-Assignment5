@@ -474,3 +474,134 @@ The application coordinates three independent subsystems through simplified inte
 It supports booking workflows, status management, persistent storage, compensation, crash recovery, and automated testing.
 
 The project demonstrates how the Facade Pattern reduces client complexity and improves separation of responsibilities.
+
+
+---
+
+# Assignment 5 — Strategy Design Pattern
+
+## 20. Overview
+
+Assignment 5 extends the Concert Ticketing System by introducing
+the Strategy Design Pattern for ticket pricing.
+
+The goal is to replace conditional pricing logic with
+independent and interchangeable pricing strategies.
+
+## 21. BEFORE Refactoring
+
+Initially, the TicketPricing class used if/else statements
+to calculate ticket prices.
+
+### BEFORE Code
+
+```java
+if (type.equals("EARLY_BIRD")) {
+    if (daysBeforeConcert >= 30) {
+        return basePrice * 0.80;
+    }
+    return basePrice;
+}
+```
+
+The original implementation supported three pricing rules:
+
+- EARLY_BIRD — 20% discount for bookings at least 30 days early.
+- DEMAND — 50% price increase when demand exceeds 80.
+- LOYALTY — 10% discount for loyal customers.
+
+### Problems
+
+- Multiple conditional statements.
+- Pricing algorithms were combined in one class.
+- Adding new pricing rules required modifying TicketPricing.
+- The class had multiple responsibilities.
+
+## 22. AFTER Refactoring
+
+The Strategy Pattern separates pricing algorithms
+into independent classes.
+
+### Strategy Interface
+
+```java
+public interface PricingStrategy {
+    double calculatePrice(
+        double basePrice,
+        int daysBeforeConcert,
+        int demand,
+        boolean loyalCustomer
+    );
+}
+```
+
+### Concrete Strategy Example
+
+```java
+public class DemandPricingStrategy
+        implements PricingStrategy {
+
+    @Override
+    public double calculatePrice(
+            double basePrice,
+            int daysBeforeConcert,
+            int demand,
+            boolean loyalCustomer) {
+
+        if (demand > 80) {
+            return basePrice * 1.50;
+        }
+
+        return basePrice;
+    }
+}
+```
+
+### Strategy Classes
+
+- PricingStrategy — common interface.
+- EarlyBirdPricingStrategy — early booking discount.
+- DemandPricingStrategy — demand-based pricing.
+- LoyaltyPricingStrategy — loyal customer discount.
+- TicketPricing — selects and uses a pricing strategy.
+
+## 23. Benefits of Strategy Pattern
+
+- Separation of pricing algorithms.
+- Improved readability and maintainability.
+- Easier addition of new strategies.
+- Better adherence to the Open/Closed Principle.
+- Independent testing of pricing rules.
+
+## 24. Testing
+
+JUnit 5 was used to verify pricing calculations.
+
+### Test Results
+
+- Total pricing tests: 7
+- Passed: 7
+- Failed: 0
+- Errors: 0
+
+All seven pricing tests passed after refactoring.
+
+## 25. Git Commit History
+
+### BEFORE Commit
+
+`b1bd2a3` — Assignment 5 BEFORE Strategy refactoring
+
+### AFTER Commit
+
+`3d91a93` — Assignment 5 AFTER Strategy refactoring
+
+The two commits demonstrate the transition from
+conditional logic to the Strategy Design Pattern.
+
+## 26. Conclusion
+
+The Strategy Design Pattern improves the ticket pricing
+system by encapsulating pricing algorithms in separate classes.
+
+The refactored design is easier to maintain, test, and extend.

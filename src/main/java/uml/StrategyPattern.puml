@@ -1,0 +1,38 @@
+
+@startuml
+title Assignment 5 - Strategy Design Pattern
+
+interface PricingStrategy {
+    +calculatePrice(basePrice: double,
+    daysBeforeConcert: int,
+    demand: int,
+    loyalCustomer: boolean): double
+}
+
+class EarlyBirdPricingStrategy {
+    +calculatePrice(...): double
+}
+
+class DemandPricingStrategy {
+    +calculatePrice(...): double
+}
+
+class LoyaltyPricingStrategy {
+    +calculatePrice(...): double
+}
+
+class TicketPricing {
+    +calculatePrice(type: String,
+    basePrice: double,
+    daysBeforeConcert: int,
+    demand: int,
+    loyalCustomer: boolean): double
+}
+
+PricingStrategy <|.. EarlyBirdPricingStrategy
+PricingStrategy <|.. DemandPricingStrategy
+PricingStrategy <|.. LoyaltyPricingStrategy
+
+TicketPricing ..> PricingStrategy : uses
+
+@enduml
