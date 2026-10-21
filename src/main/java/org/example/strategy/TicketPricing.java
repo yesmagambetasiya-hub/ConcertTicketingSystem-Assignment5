@@ -10,29 +10,32 @@ public class TicketPricing {
             int demand,
             boolean loyalCustomer) {
 
-        if (type.equals("EARLY_BIRD")) {
-            if (daysBeforeConcert >= 30) {
-                return basePrice * 0.80;
-            }
-            return basePrice;
+        PricingStrategy strategy;
+
+        switch (type) {
+            case "EARLY_BIRD":
+                strategy = new EarlyBirdPricingStrategy();
+                break;
+
+            case "DEMAND":
+                strategy = new DemandPricingStrategy();
+                break;
+
+            case "LOYALTY":
+                strategy = new LoyaltyPricingStrategy();
+                break;
+
+            default:
+                throw new IllegalArgumentException(
+                        "Unknown pricing type: " + type
+                );
         }
 
-        if (type.equals("DEMAND")) {
-            if (demand > 80) {
-                return basePrice * 1.50;
-            }
-            return basePrice;
-        }
-
-        if (type.equals("LOYALTY")) {
-            if (loyalCustomer) {
-                return basePrice * 0.90;
-            }
-            return basePrice;
-        }
-
-        throw new IllegalArgumentException(
-                "Unknown pricing type: " + type
+        return strategy.calculatePrice(
+                basePrice,
+                daysBeforeConcert,
+                demand,
+                loyalCustomer
         );
     }
 }
